@@ -1,21 +1,94 @@
-<!--The content below is only a placeholder and can be replaced.-->
-<div style="text-align:center">
-  <h1>
-    Welcome to {{ title }}!
-  </h1>
-  <img width="300" alt="Angular Logo" src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAyNTAgMjUwIj4KICAgIDxwYXRoIGZpbGw9IiNERDAwMzEiIGQ9Ik0xMjUgMzBMMzEuOSA2My4ybDE0LjIgMTIzLjFMMTI1IDIzMGw3OC45LTQzLjcgMTQuMi0xMjMuMXoiIC8+CiAgICA8cGF0aCBmaWxsPSIjQzMwMDJGIiBkPSJNMTI1IDMwdjIyLjItLjFWMjMwbDc4LjktNDMuNyAxNC4yLTEyMy4xTDEyNSAzMHoiIC8+CiAgICA8cGF0aCAgZmlsbD0iI0ZGRkZGRiIgZD0iTTEyNSA1Mi4xTDY2LjggMTgyLjZoMjEuN2wxMS43LTI5LjJoNDkuNGwxMS43IDI5LjJIMTgzTDEyNSA1Mi4xem0xNyA4My4zaC0zNGwxNy00MC45IDE3IDQwLjl6IiAvPgogIDwvc3ZnPg==">
-</div>
-<h2>Here are some links to help you start: </h2>
-<ul>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/tutorial">Tour of Heroes</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://angular.io/cli">CLI Documentation</a></h2>
-  </li>
-  <li>
-    <h2><a target="_blank" rel="noopener" href="https://blog.angular.io/">Angular blog</a></h2>
-  </li>
-</ul>
+<div [ngClass]="{'main-container': true,'small-screen': isSmallScreen, 'large-screen': !isSmallScreen}">
 
-<router-outlet></router-outlet>
+  <mat-paginator [length]="totalCount"
+                 [pageSize]="perPageCount"
+                 [hidePageSize]="true"
+                 (page)="updateUserList($event.pageIndex + 1)">
+  </mat-paginator>
+  <mat-list cdkDropList (cdkDropListDropped)="dropEvent($event)">
+    <div [ngClass]="['user-list-item']" *ngFor="let user of userArray" cdkDrag [cdkDragData]="user">
+      <mat-list-item >
+        <img matListAvatar [src] = "user?.avatar">
+        <h3 matLine> {{user?.first_name + ' ' + user?.last_name}} </h3>
+        <!--<p matLine *ngIf="clickedUserId === user?.id">
+          <span> {{userDetails?.email}} </span>
+        </p>-->
+        <button mat-icon-button *ngIf="clickedUserId === user?.id">
+          <mat-icon matListIcon (click)="closeUserDetails(); clickedUserId = 0">
+            keyboard_arrow_up
+          </mat-icon>
+        </button>
+        <button mat-icon-button *ngIf="clickedUserId !== user?.id">
+          <mat-icon matListIcon
+                    (click)="fetchUserDetails(user?.id); clickedUserId = user?.id">
+            keyboard_arrow_down
+          </mat-icon>
+        </button>
+      </mat-list-item>
+      <mat-divider *ngIf="clickedUserId === user?.id"></mat-divider>
+      <div *ngIf="clickedUserId === user?.id" [ngClass]="['user-details-card']">
+        <p>
+          <strong>User Id: </strong>&emsp;<span> {{userDetails?.id}} </span>
+        </p>
+        <p>
+          <strong>User First Name: </strong>&emsp;<span> {{userDetails?.first_name}} </span>
+        </p>
+        <p>
+          <strong>User Last Name: </strong>&emsp;<span> {{userDetails?.last_name}} </span>
+        </p>
+        <p>
+          <strong>User Email Id: </strong>&emsp;<span> {{userDetails?.email}} </span>
+        </p>
+        <div [ngClass]="'user-details-card-action'">
+          <span class="fill-space"></span>
+          <button mat-flat-button color="primary" (click)="updateUser()">
+            <mat-icon>create</mat-icon> Update
+          </button>
+          <button mat-flat-button color="warn" (click)="deleteUser()">
+            <mat-icon>delete</mat-icon> Delete
+          </button>
+        </div>
+      </div>
+    </div>
+  </mat-list>
+  <div style="padding-top: 1rem">
+    <button mat-flat-button color="primary" (click)="showAddForm = true;" *ngIf="!showAddForm">
+      <mat-icon>add</mat-icon> Add New User
+    </button>
+    <form [formGroup]="addUserForm" *ngIf="showAddForm" style="padding-top: 1.5rem">
+      <mat-form-field style="margin: 0 0.8rem 0"
+        [hideRequiredMarker]="addUserForm.value.hideRequired"
+        [floatLabel]="addUserForm.value.floatLabel">
+        <input matInput
+               formControlName="name"
+               placeholder="User Name"
+               type="text"
+               required>
+        <mat-hint>Max Length 10</mat-hint>
+      </mat-form-field>
+      <mat-form-field style="margin: 0 0.8rem 0"
+        [hideRequiredMarker]="addUserForm.value.hideRequired"
+        [floatLabel]="addUserForm.value.floatLabel">
+        <input matInput
+               formControlName="job"
+               placeholder="User Job"
+               type="text"
+               required>
+        <mat-hint>Max Length 10</mat-hint>
+      </mat-form-field>
+      <div style="display: flex; flex-direction: row">
+        <span class="fill-space"></span>
+        <button mat-flat-button color="primary" (click)="addUser()" [disabled]="!addUserForm.valid"
+                style="margin: 0
+      0.8rem 0">
+          <mat-icon>done</mat-icon> Confirm
+        </button>
+        <button mat-stroked-button (click)="showAddForm = false;" style="margin: 0 0.8rem 0">
+          <mat-icon>clear</mat-icon> Cancel
+        </button>
+      </div>
+    </form>
+  </div>
+  <!--TODO: add  -->
+  <mat-spinner *ngIf="showSpinner"></mat-spinner>
+</div>

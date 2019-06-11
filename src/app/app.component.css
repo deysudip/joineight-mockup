@@ -1,0 +1,43 @@
+.main-container{
+    margin-top: 1rem;
+    padding: 1rem;
+
+}
+.main-container.large-screen {
+    width: 60%;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.main-container.small-screen {
+    margin-left: 0.5rem;
+    margin-right: 0.5rem;
+    padding: 0.5rem;
+}
+
+.user-list-item {
+    margin-bottom: 0.5rem;
+    box-shadow: 0 1px 3px rgba(34, 25, 25, 0.4);
+}
+
+.user-details-card {
+    padding: 1rem;
+}
+
+.user-details-card strong {
+    font-weight: 500;
+}
+
+.user-details-card-action {
+    display: flex;
+    flex-direction: row;
+}
+
+.user-details-card-action button {
+    margin: 0 0.5rem 0;
+}
+
+.fill-space{
+    flex: 1 1 auto;
+}
+
