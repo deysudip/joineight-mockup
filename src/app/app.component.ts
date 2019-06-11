@@ -153,7 +153,7 @@ export class AppComponent {
             } else {
             //  Todo: display update Toast here
               this.toast.showToast(`Update Successful! User Id: 1, Update Time: ${this.datePipe.transform(resp.body.updatedAt,
-                'mm:hh dd/MMM/yyyy')}`);
+                'hh:mm dd/MMM/yyyy')}`);
             }
           } catch (e) {
             console.error(e.message);
@@ -205,7 +205,7 @@ export class AppComponent {
                 throw new Error(`Error in addUser:app.component.ts => Status Code ${resp.status}`);
               } else {
                 this.toast.showToast(`New User Added! User Id: ${resp.body.id}, Create time : ${this.datePipe.transform(resp.body.createdAt,
-                  'mm:hh dd/MMM/yyyy')}`);
+                  'hh:mm dd/MMM/yyyy')}`);
               }
             } catch (e) {
               console.error(e.message);
@@ -219,6 +219,12 @@ export class AppComponent {
     } else {
       this.toast.showToast('User Form Invalid!');
     }
+  }
+
+  cancelAddUserForm() {
+    this.showAddForm = false;
+    this.addUserForm.controls['name'].setValue('');
+    this.addUserForm.controls['job'].setValue('');
   }
 
   dropEvent(event: CdkDragDrop<string[]>) {
