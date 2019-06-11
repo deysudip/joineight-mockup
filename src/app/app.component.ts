@@ -192,7 +192,7 @@ export class AppComponent {
 
   addUser() {
     if (this.addUserForm.valid) {
-      this.showAddForm = false;
+      this.cancelAddUserForm();
       this.spinner.showSpinner();
       const newUser = {...this.addUserForm.value as UserRequest};
 
